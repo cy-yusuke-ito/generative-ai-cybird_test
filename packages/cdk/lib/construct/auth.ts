@@ -30,6 +30,7 @@ export class Auth extends Construct {
     super(scope, id);
 
     const userPool = new UserPool(this, 'UserPool', {
+      userPoolName: 'gen_ai_test_name_cognito', // ここでユーザープールの名前を指定
       // SAML 認証を有効化する場合、UserPool を利用したセルフサインアップは利用しない。セキュリティを意識して閉じる。
       selfSignUpEnabled: props.samlAuthEnabled
         ? false
@@ -43,6 +44,15 @@ export class Auth extends Construct {
         requireSymbols: true,
         requireDigits: true,
         minLength: 8,
+      },
+      userInvitation: {
+        emailSubject: '[社内チャットアプリ] 一時パスワードのお知らせ',
+        emailBody: `xx 社のチャットアプリにアカウントが登録されました。<br>
+ユーザー名 : {username} <br>
+一時パスワード : {####} <br>
+<br>
+以下の URL からアクセスして、本登録をお願いします。<br>
+https://d3fckmp2cn5p3y.cloudfront.net/`,
       },
     });
 
